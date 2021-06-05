@@ -21,8 +21,8 @@
 |                                 Global variables                                   |
 |                                                                                    |
 **************************************************************************************/
-#define VERTICALRESOLUTION 200;      // Vertical window resolution  
-#define HORIZONTALRESOLUTION 400;    // Horizontal window resolution
+#define VERTICALRESOLUTION int 200;      // Vertical window resolution  
+#define HORIZONTALRESOLUTION int 400;    // Horizontal window resolution
 #define TH 100;                      // Texture array horizontal size 
 #define TV 100;                      // Texture array vertical size
 
@@ -35,6 +35,7 @@ struct vertex
     int positionY;
 };
 
+int frameBuffer[500][500];
 
 // TEXTURE array 
 // RGB structure
@@ -168,19 +169,66 @@ void mapWindowToFrameBuffer_Polygons(){
 }
 
 
+void IniciarGLUT() {
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+  glutInitWindowSize(500,500);
+  glutInitWindowPosition(100,100);
+  glutCreateWindow("Map of Costa Rica");
+}
+
+void Proyectar(int w, int h) {
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0,5,0,5,-1,1);
+ 
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
+}
+
+void PintarEscena() {
+  glMatrixMode(GL_MODELVIEW);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+    glBegin(GL_POINTS);
+
+  for (int i=0;i<500;i++){
+    for (int j=0;j<500;j++){
+    glColor3f(0.0f,0.0f,0.0f);
+    glVertex2f(i,j);
+    }
+
+
+  }
+      glEnd();
+      
+
+
+  //glColor3f(0.0f,0.0f,0.0f);
+  //glRectf(2.0f,1.0f,4.0f,3.0f);
+ 
+  //glColor3f(0.5f,0.5f,0.0f);
+  //glRectf(1.0f,2.0f,3.0f,4.0f);
+ 
+  glutSwapBuffers();
+}
+
 /**************************************************************************************
 |                                                                                    |
 |                                 Main Function                                      |
 |                                                                                    |
 **************************************************************************************/
 
-
-
-int main(){
-    //glutInitWindowSize(horizontalResolution,verticalResolution);
-    //glutInitWindowPosition(0,0);
-    //glutInitDisplayMode(GLUT_RGBA | GLUT_SINGLE);
-    //glutInit();
+int main(int argc, char **argv)
+{
+    //frameBuffer=(int *)malloc(sizeof(int));
+    frameBuffer[0][0]=2;
+    glutInit(&argc,argv); //Solo necesario en Linux
+    IniciarGLUT();
+    //Proyectar(0,0);
+    glutDisplayFunc(PintarEscena);
+    //GL_COLOR_BUFFER_BIT[0f][0f]=
+    glutReshapeFunc(Proyectar);
+ 
+    glutMainLoop();
     return 0;
 }
 
